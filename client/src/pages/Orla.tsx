@@ -1,6 +1,6 @@
-import Images from '../components/images'
-import Model from '../components/model'
-import Prompt from '../components/prompt'
+import Images from '../components/Images'
+import Model from '../components/Model'
+import Prompt from '../components/Prompt'
 
 export default function Orla() {
     return (
