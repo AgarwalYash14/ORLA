@@ -11,7 +11,8 @@
     /* Font color     */
     --color-primary: oklch(92.2% 0 0);
     --color-secondary: oklch(62.3% 0.214 259.815); /* blue */
-    --color-tertiary: oklch(70.8% 0 0);
+    --color-tertiary: oklch(70.8% 0 0); /* border */
+    --color-quaternary: oklch(27.4% 0.006 286.033); /* text */
 }
 
 @font-face {
@@ -25,8 +26,8 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: var(--font-primary);
-
     background: var(--color-primary);
+    color: var(--color-quaternary);
 }
 
 ::selection {
