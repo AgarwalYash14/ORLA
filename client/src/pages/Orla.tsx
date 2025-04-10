@@ -14,7 +14,7 @@ export default function Orla() {
                         <Images />
                     </div>
                 </div>
-                <div className="col-span-4 w-full border">
+                <div className="col-span-4 w-full border border-tertiary">
                     <Model />
                 </div>
             </div>
