@@ -2,7 +2,7 @@ import Images from '../components/images'
 import Model from '../components/model'
 import Prompt from '../components/prompt'
 
-export default function Blue() {
+export default function Orla() {
     return (
         <>
             <div className="grid w-full grid-cols-7">
