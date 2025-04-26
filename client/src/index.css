@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Doto:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+@import 'tailwindcss';
+
+@theme {
+    /* Font Family */
+    --font-primary: 'Roboto Mono', monospace;
+    --font-secondary: 'Amiga', sans-serif;
+    --font-tertiary: 'Chakra Petch', sans-serif;
+
+    /* Font color     */
+    --color-primary: oklch(92.2% 0 0);
+    --color-secondary: oklch(62.3% 0.214 259.815); /* blue */
+    --color-secondary-dark: oklch(62.3% 0.29 259.815); /* blue */
+    --color-tertiary: oklch(70.8% 0 0); /* border */
+    --color-quaternary: oklch(27.4% 0.006 286.033); /* text */
+}
+
+@font-face {
+    font-family: 'Amiga';
+    src: url('./fonts/Amiga.otf') format('opentype');
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-primary);
+    background: var(--color-primary);
+    color: var(--color-quaternary);
+}
+
+::selection {
+    background-color: var(--color-secondary);
+    color: white;
+}
+
+.nav-triangle-wrapper.nav-triangle-wrapper-left {
+    -webkit-clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        1.42rem 100%,
+        0 calc(100% - 1.42rem)
+    );
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        1.42rem 100%,
+        0 calc(100% - 1.42rem)
+    );
+    left: 0;
+}
+
+.nav-triangle-wrapper.nav-triangle-wrapper-right {
+    -webkit-clip-path: polygon(
+        100% 0,
+        100% calc(100% - 1.42rem),
+        calc(100% - 1.42rem) 100%,
+        0 100%,
+        0 0
+    );
+    clip-path: polygon(
+        100% 0,
+        100% calc(100% - 1.42rem),
+        calc(100% - 1.42rem) 100%,
+        0 100%,
+        0 0
+    );
+    right: 0;
+}
+
+.nav-triangle-wrapper {
+    background-color: var(--color-primary);
+    width: calc(1.42rem + 1px);
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+
+.nav-triangle.nav-triangle-left {
+    -webkit-clip-path: polygon(0 0, 0% 100%, 100% 100%);
+    clip-path: polygon(0 0, 0% 100%, 100% 100%);
+    margin-bottom: 0;
+    margin-right: 0;
+    position: absolute;
+    inset: auto auto 0% 0%;
+}
+
+.nav-triangle.nav-triangle-right {
+    -webkit-clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    margin-bottom: 0;
+    margin-right: 0;
+    inset: auto 0% 0% auto;
+}
+
+.nav-triangle {
+    z-index: 2;
+    aspect-ratio: 1;
+    background-color: var(--color-tertiary);
+    width: 100%;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    position: absolute;
+    /* bottom: 0; */
+}
+
+.polygon {
+    -webkit-clip-path: polygon(
+        10px 0,
+        100% 0,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        0 100%,
+        0 10px
+    );
+    clip-path: polygon(
+        10px 0,
+        100% 0,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        0 100%,
+        0 10px
+    );
+    border-radius: 14px 3px 16px;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}

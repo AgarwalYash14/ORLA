@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    container_name: orla-web-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    env_file:
+      - .env
+
+  redis:
+    image: redis:7
+    container_name: orla-redis-service
+    ports:
+      - "6379:6379"
+
+  worker:
+    build: .
+    container_name: orla-worker-service
+    command: celery -A app.tasks worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    env_file:
+      - .env

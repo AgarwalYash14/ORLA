@@ -1,0 +1,9 @@
+fastapi==0.115.12
+uvicorn==0.34.2
+python-multipart==0.0.20
+opencv-python==4.11.0.86
+numpy==2.2.5
+celery==5.5.1
+redis==5.2.1
+requests==2.32.3
+Pillow==11.2.1
