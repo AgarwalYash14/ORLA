@@ -6,17 +6,18 @@ import { useState } from 'react'
 
 export default function Orla() {
     const [generatedImages, setGeneratedImages] = useState<string[]>([])
-    const [modelData, setModelData] = useState<{
-        type: string
-        path: string
-    } | null>(null)
+    const [modelData, setModelData] = useState<{ model_url: string } | null>(
+        null
+    )
     const [error, setError] = useState<string | null>(null)
     const [isLoadingImage, setIsLoadingImage] = useState(false)
     const [isLoadingModel, setIsLoadingModel] = useState(false)
+    const [lastPrompt, setLastPrompt] = useState<string>('')
 
-    const handleGenerateImages = async (prompt: string, image: File | null) => {
+    const handleGenerateImages = async (prompt: string) => {
         setError(null)
         setIsLoadingImage(true)
+        setLastPrompt(prompt)
         try {
             const formData = new FormData()
             if (prompt) formData.append('prompt', prompt)
@@ -31,16 +32,25 @@ export default function Orla() {
             )
             setGeneratedImages(response.data.images || [])
             setModelData(null)
-        } catch (error: any) {
-            const errorMessage =
-                error.response?.data?.detail || 'Failed to generate images'
+        } catch (error: unknown) {
+            const errorMessage = axios.isAxiosError(error)
+                ? error.response?.data?.detail || 'Failed to generate images'
+                : 'Failed to generate images'
             setError(errorMessage)
             console.error(
                 'Error generating images:',
-                error.response?.data || error
+                axios.isAxiosError(error)
+                    ? error.response?.data || error
+                    : error
             )
         } finally {
             setIsLoadingImage(false)
+        }
+    }
+
+    const handleRetry = () => {
+        if (lastPrompt) {
+            handleGenerateImages(lastPrompt)
         }
     }
 
@@ -67,14 +77,18 @@ export default function Orla() {
                     timeout: 600000, // 10 minutes
                 }
             )
-            setModelData(response.data.model)
-        } catch (error: any) {
-            const errorMessage =
-                error.response?.data?.detail || 'Failed to generate 3D model'
+            console.log('Model API response:', response.data)
+            setModelData(response.data)
+        } catch (error: unknown) {
+            const errorMessage = axios.isAxiosError(error)
+                ? error.response?.data?.detail || 'Failed to generate 3D model'
+                : 'Failed to generate 3D model'
             setError(errorMessage)
             console.error(
                 'Error generating 3D model:',
-                error.response?.data || error
+                axios.isAxiosError(error)
+                    ? error.response?.data || error
+                    : error
             )
         } finally {
             setIsLoadingModel(false)
@@ -87,19 +101,13 @@ export default function Orla() {
                 <div className="w-1/2 flex overflow-hidden">
                     <div className="w-full">
                         <Prompt onGenerate={handleGenerateImages} />
-                        {isLoadingImage && (
-                            <div className="flex justify-center items-center mt-4">
-                                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-secondary"></div>
-                                <span className="ml-2 text-tertiary">
-                                    Generating image...
-                                </span>
-                            </div>
-                        )}
                     </div>
                     <div className="w-full">
                         <Images
                             images={generatedImages}
                             onGenerateModel={handleGenerateModel}
+                            isGenerating={isLoadingImage}
+                            onRetry={handleRetry}
                         />
                     </div>
                 </div>

@@ -6,6 +6,8 @@ import time
 from PIL import Image
 import io
 import random
+from app.model_generator import generate_3d_model
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,8 +30,8 @@ def process_image_task(self, prompt: str, image_path: str | None, task_id: str):
         }
 
         base_prompt = prompt or "Improve the uploaded image"
-        enhanced_prompt = f"{base_prompt}, low-poly 3D model, no background, only the object"
-
+        enhanced_prompt = f"{base_prompt}, photorealistic 3D model, high detail, intricate surface details, realistic materials, accurate lighting, ambient occlusion, no background, isolated object"
+        
         payload = {
             "inputs": enhanced_prompt,
             "parameters": {
@@ -73,6 +75,13 @@ def process_image_task(self, prompt: str, image_path: str | None, task_id: str):
 
     return {"images": images}
 
-@app.task
-def generate_model_task(image_url: str, task_id: str):
-    raise NotImplementedError("Model generation is not implemented")
+@app.task(bind=True, max_retries=3)
+def generate_model_task(self, image_url: str, task_id: str):
+    try:
+        result = generate_3d_model(image_url, task_id)
+        return result
+    except Exception as e:
+        if str(e).startswith("429"):  # Handle Hugging Face rate limit
+            logger.warning(f"Rate limit hit for task_id {task_id}, retrying...")
+            raise self.retry(countdown=30)  # Wait 30 seconds before retrying
+        raise

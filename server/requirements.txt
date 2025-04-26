@@ -7,3 +7,4 @@ celery==5.5.1
 redis==5.2.1
 requests==2.32.3
 Pillow==11.2.1
+gradio-client==1.9.0

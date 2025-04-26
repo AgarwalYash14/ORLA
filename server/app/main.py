@@ -4,7 +4,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
-from app.tasks import process_image_task, generate_model_task
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -19,6 +22,7 @@ app.add_middleware(
 
 # Mount static files
 os.makedirs("app/static/images", exist_ok=True)
+os.makedirs("app/static/models", exist_ok=True)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # Pydantic model for request validation
@@ -30,22 +34,23 @@ async def generate_images(prompt: str = Form(None), image: UploadFile = File(Non
     if not prompt and not image:
         raise HTTPException(status_code=400, detail="Prompt or image required")
 
-    task_id = str(os.urandom(16).hex())  # Unique task ID
+    task_id = str(os.urandom(16).hex())
     image_path = None
 
     if image:
-        # Save uploaded image
         contents = await image.read()
         image_path = f"app/static/images/{task_id}_original.png"
         with open(image_path, "wb") as f:
             f.write(contents)
 
     try:
-        # Offload processing to Celery
+        from app.tasks import process_image_task
         task = process_image_task.delay(prompt or "", image_path, task_id)
-        result = task.get(timeout=30)  # Wait for task completion
+        result = task.get(timeout=120)
+        logger.info(f"Image generation completed for task_id: {task_id}")
         return JSONResponse(content={"images": result["images"]})
     except Exception as e:
+        logger.error(f"Image processing failed for task_id {task_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Image processing failed: {str(e)}")
 
 @app.post("/generate-3d-model")
@@ -58,15 +63,23 @@ async def generate_3d_model(request: GenerateModelRequest):
     if not image_url.startswith("http://localhost:8000/static/images/"):
         raise HTTPException(status_code=422, detail="imageUrl must start with http://localhost:8000/static/images/")
 
-    # Check if the image file exists
     img_path = image_url.replace("http://localhost:8000/", "app/")
     if not os.path.exists(img_path):
         raise HTTPException(status_code=404, detail=f"Image not found at {img_path}")
 
     task_id = str(os.urandom(16).hex())
     try:
+        from app.tasks import generate_model_task
         task = generate_model_task.delay(image_url, task_id)
-        result = task.get(timeout=30)
-        return JSONResponse(content={"model": result["model"]})
+        result = task.get(timeout=900)  # 15 minutes
+        if result["status"] != "success":
+            logger.error(f"3D model generation failed for task_id {task_id}: {result.get('error', 'Unknown error')}")
+            raise HTTPException(status_code=500, detail=f"3D model generation failed: {result.get('error', 'Unknown error')}")
+        logger.info(f"3D model generation completed for task_id: {task_id}")
+        return JSONResponse(content={"model_url": result["model_url"]})
+    except TimeoutError:
+        logger.error(f"3D model generation timed out for task_id {task_id}")
+        raise HTTPException(status_code=504, detail="3D model generation timed out after 10 minutes")
     except Exception as e:
+        logger.error(f"3D model generation failed for task_id {task_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=f"3D model generation failed: {str(e)}")

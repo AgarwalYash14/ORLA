@@ -1,15 +1,21 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 interface PromptProps {
-    onGenerate: (prompt: string, image: File | null) => void
+    onGenerate: (prompt: string) => void
 }
 
 export default function Prompt({ onGenerate }: PromptProps) {
     const [prompt, setPrompt] = useState('')
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        onGenerate(prompt, null) // Pass null for image since upload is removed
+        setIsSubmitting(true)
+        try {
+            await onGenerate(prompt)
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     return (
@@ -26,7 +32,7 @@ export default function Prompt({ onGenerate }: PromptProps) {
                             e.target.style.height = 'auto'
                             e.target.style.height = `${e.target.scrollHeight}px`
                         }}
-                        placeholder="Describe improvements (e.g., Change the car's color to red and make it more angular)"
+                        placeholder="Describe your image"
                         className="text-sm w-full h-auto overflow-hidden resize-none p-2 outline-none border border-tertiary rounded focus:ring-1 focus:ring-secondary"
                     />
                 </div>
@@ -35,9 +41,9 @@ export default function Prompt({ onGenerate }: PromptProps) {
                 <button
                     type="submit"
                     className="text-white bg-secondary border-secondary cursor-pointer border-2 px-5 py-2 text-base text-nowrap whitespace-nowrap hover:bg-secondary-dark rounded uppercase"
-                    disabled={!prompt}
+                    disabled={!prompt || isSubmitting}
                 >
-                    Generate
+                    {isSubmitting ? 'Generating...' : 'Generate'}
                 </button>
             </form>
         </div>
