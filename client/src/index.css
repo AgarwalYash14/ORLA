@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Doto:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 @import 'tailwindcss';
 
@@ -6,19 +6,36 @@
     /* Font Family */
     --font-primary: 'Roboto Mono', monospace;
     --font-secondary: 'Amiga', sans-serif;
-    --font-tertiary: 'Chakra Petch', sans-serif;
+    --font-tertiary: 'Outfit', sans-serif;
 
     /* Font color     */
     --color-primary: oklch(92.2% 0 0);
     --color-secondary: oklch(62.3% 0.214 259.815); /* blue */
-    --color-secondary-dark: oklch(62.3% 0.29 259.815); /* blue */
     --color-tertiary: oklch(70.8% 0 0); /* border */
-    --color-quaternary: oklch(27.4% 0.006 286.033); /* text */
 }
 
 @font-face {
     font-family: 'Amiga';
     src: url('./fonts/Amiga.otf') format('opentype');
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    display: none;
+}
+
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 html,
@@ -28,7 +45,6 @@ body {
     box-sizing: border-box;
     font-family: var(--font-primary);
     background: var(--color-primary);
-    color: var(--color-quaternary);
 }
 
 ::selection {
@@ -105,10 +121,64 @@ body {
     margin-bottom: 1px;
     margin-right: 1px;
     position: absolute;
-    /* bottom: 0; */
 }
 
-.polygon {
+.nav-link {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+.nav-link::before,
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    opacity: 0;
+    transition:
+        opacity 0.3s,
+        transform 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.nav-link::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid var(--color-secondary);
+    border-left: 2px solid var(--color-secondary);
+    transform: translate(50%, 50%);
+}
+
+.nav-link::after {
+    bottom: 0;
+    right: 0;
+    border-right: 2px solid var(--color-secondary);
+    border-bottom: 2px solid var(--color-secondary);
+    transform: translate(-50%, -50%);
+}
+
+.nav-link:hover::before,
+.nav-link:hover::after,
+.nav-link.active::before,
+.nav-link.active::after {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+.rounded-btn {
+    text-align: center;
+    cursor: pointer;
+    line-height: 114%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-block;
+    padding: calc(0.75rem + 1px) calc(1.5rem + 1px);
+    background-color: var(--color-secondary);
     -webkit-clip-path: polygon(
         10px 0,
         100% 0,
@@ -128,11 +198,45 @@ body {
     border-radius: 14px 3px 16px;
 }
 
+.rounded-btn:hover {
+    background-color: var(--color-secondary);
+}
+
+.rounded-btn::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background-color: var(--color-secondary);
+    -webkit-clip-path: polygon(
+        10px 0,
+        100% 0,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        0 100%,
+        0 10px
+    );
+    clip-path: polygon(
+        10px 0,
+        100% 0,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        0 100%,
+        0 10px
+    );
+    border-radius: 14px 3px 16px;
+    z-index: -1;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.rounded-btn:hover::after {
+    background-color: var(--color-primary);
+}
+
 .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none; /* Chrome, Safari and Opera */
 }

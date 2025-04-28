@@ -97,37 +97,41 @@ export default function Orla() {
 
     return (
         <>
-            <div className="mx-auto h-[calc(100vh-5rem)] relative w-[97%] flex">
-                <div className="w-1/2 flex overflow-hidden">
-                    <div className="w-full">
-                        <Prompt onGenerate={handleGenerateImages} />
-                    </div>
-                    <div className="w-full">
-                        <Images
-                            images={generatedImages}
-                            onGenerateModel={handleGenerateModel}
-                            isGenerating={isLoadingImage}
-                            onRetry={handleRetry}
-                        />
-                    </div>
-                </div>
-                <div className="w-1/2 overflow-hidden">
-                    <Model modelData={modelData} />
-                    {isLoadingModel && (
-                        <div className="flex justify-center items-center mt-4">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-secondary"></div>
-                            <span className="ml-2 text-tertiary">
-                                Generating 3D model...
-                            </span>
+            <div className="z-40 flex justify-between">
+                <div className="border-tertiary w-[4%] border-r" />
+                <div className="relative mx-auto flex h-[calc(100vh-5rem)] w-[91.9%]">
+                    <div className="flex w-1/2 overflow-hidden">
+                        <div className="w-full">
+                            <Prompt onGenerate={handleGenerateImages} />
                         </div>
-                    )}
+                        <div className="border-tertiary h-full w-full border-x-2">
+                            <Images
+                                images={generatedImages}
+                                onGenerateModel={handleGenerateModel}
+                                isGenerating={isLoadingImage}
+                                onRetry={handleRetry}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-1/2 overflow-hidden">
+                        <Model modelData={modelData} />
+                        {isLoadingModel && (
+                            <div className="mt-4 flex items-center justify-center">
+                                <div className="border-secondary h-12 w-12 animate-spin rounded-full border-t-2 border-b-2"></div>
+                                <span className="text-tertiary ml-2">
+                                    Generating 3D model...
+                                </span>
+                            </div>
+                        )}
+                    </div>
                 </div>
+                {error && (
+                    <div className="fixed bottom-4 left-4 rounded bg-red-500 p-4 text-white">
+                        {error}
+                    </div>
+                )}
+                <div className="border-tertiary w-[4%] border-l" />
             </div>
-            {error && (
-                <div className="fixed bottom-4 left-4 bg-red-500 text-white p-4 rounded">
-                    {error}
-                </div>
-            )}
         </>
     )
 }

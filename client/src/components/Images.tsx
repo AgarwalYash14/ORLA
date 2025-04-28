@@ -33,35 +33,36 @@ export default function Images({
     }
 
     return (
-        <div className="border-x border-tertiary p-4 flex flex-col gap-4 h-full">
-            <div className="flex justify-between items-center shrink-0">
-                <h1>Images</h1>
-                {onRetry && (
-                    <button
-                        onClick={onRetry}
-                        disabled={isGenerating}
-                        className="flex items-center gap-1 text-secondary hover:text-secondary-dark cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="Regenerate images"
-                    >
-                        <BiRefresh
-                            className={`text-xl ${
-                                isGenerating ? 'animate-spin' : ''
-                            }`}
-                        />
-                        <span>Retry</span>
-                    </button>
-                )}
-            </div>
+        <>
+            <div className="flex flex-col gap-4 p-4">
+                <div className="flex shrink-0 items-center justify-between">
+                    <h1>Images</h1>
+                    {onRetry && (
+                        <button
+                            onClick={onRetry}
+                            disabled={isGenerating}
+                            className="text-secondary hover:text-secondary-dark flex cursor-pointer items-center gap-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            title="Regenerate images"
+                        >
+                            <BiRefresh
+                                className={`text-xl ${
+                                    isGenerating ? 'animate-spin' : ''
+                                }`}
+                            />
+                            <span>Retry</span>
+                        </button>
+                    )}
+                </div>
 
-            {(isGenerating || (imageLoading && images.length > 0)) && (
-                <div className="aspect-square rounded-md relative w-full overflow-hidden">
-                    <div
-                        className="absolute inset-0 bg-gradient-to-br from-blue-50 via-blue-200 to-blue-50 bg-[length:300%_300%] border border-tertiary/50 rounded-md"
-                        style={{
-                            animation: 'gradientFlow 4s ease infinite',
-                        }}
-                    />
-                    <style>{`
+                {(isGenerating || (imageLoading && images.length > 0)) && (
+                    <div className="relative aspect-square w-full overflow-hidden rounded-md">
+                        <div
+                            className="border-tertiary/50 absolute inset-0 rounded-md border bg-gradient-to-br from-blue-50 via-blue-200 to-blue-50 bg-[length:300%_300%]"
+                            style={{
+                                animation: 'gradientFlow 4s ease infinite',
+                            }}
+                        />
+                        <style>{`
                             @keyframes gradientFlow {
                                 0% {
                                     background-position: 0% 50%;
@@ -74,52 +75,65 @@ export default function Images({
                                 }
                             }
                         `}</style>
-                </div>
-            )}
-
-            <div className="overflow-y-auto flex-1 scrollbar-hide grid gap-4">
-                {images.length === 0 ? (
-                    <p className="text-tertiary">No images generated yet</p>
-                ) : (
-                    images.map((imageUrl, index) => (
-                        <div
-                            key={index}
-                            className={`bg-white h-min relative p-2 rounded-md ${
-                                selected === index
-                                    ? 'border-2 border-secondary transition ease-in-out'
-                                    : 'border-0'
-                            }`}
-                            onClick={() => setSelected(index)}
-                        >
-                            <img
-                                src={imageUrl}
-                                alt={`Generated ${index + 1}`}
-                                className="object-contain rounded-sm"
-                                onLoad={() => setImageLoading(false)}
-                                onError={() => setImageLoading(false)}
-                            />
-                            {selected === index && (
-                                <div className="absolute top-0 left-0 bg-white p-2 rounded-tl-md">
-                                    <BiCheck />
-                                </div>
-                            )}
-                        </div>
-                    ))
+                    </div>
                 )}
+
+                <div className="scrollbar-hide grid gap-4 overflow-y-auto">
+                    {images.length === 0 ? (
+                        <div className="relative aspect-square w-full overflow-hidden rounded-md">
+                            <div className="border-tertiary absolute inset-0 rounded-md border bg-neutral-300">
+                                <div className="flex h-full flex-col items-center justify-center">
+                                    <p className="mb-2 text-center text-sm text-gray-600">
+                                        No images generated yet
+                                    </p>
+                                    <p className="text-center text-xs text-gray-500">
+                                        Write a prompt to generate images
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        images.map((imageUrl, index) => (
+                            <div
+                                key={index}
+                                className={`border-tertiary relative h-min rounded-md border-1 bg-white p-2 ${
+                                    selected === index
+                                        ? 'border-secondary border-2 transition ease-in-out'
+                                        : 'border-0'
+                                }`}
+                                onClick={() => setSelected(index)}
+                            >
+                                <img
+                                    src={imageUrl}
+                                    alt={`Generated ${index + 1}`}
+                                    className="rounded-sm object-contain"
+                                    onLoad={() => setImageLoading(false)}
+                                    onError={() => setImageLoading(false)}
+                                />
+                                {selected === index && (
+                                    <div className="absolute top-0 left-0 rounded-tl-md bg-white p-2">
+                                        <BiCheck />
+                                    </div>
+                                )}
+                            </div>
+                        ))
+                    )}
+                </div>
+                <button
+                    className="rounded-btn"
+                    onClick={handleGenerate}
+                    disabled={
+                        selected === null ||
+                        !images[selected] ||
+                        !images[selected]?.startsWith(
+                            'http://localhost:8000/static/images/'
+                        )
+                    }
+                >
+                    Generate Model
+                </button>
             </div>
-            <button
-                className="text-white bg-secondary border-secondary cursor-pointer border-2 px-5 py-2 text-base text-nowrap whitespace-nowrap hover:bg-secondary-dark rounded"
-                onClick={handleGenerate}
-                disabled={
-                    selected === null ||
-                    !images[selected] ||
-                    !images[selected]?.startsWith(
-                        'http://localhost:8000/static/images/'
-                    )
-                }
-            >
-                Generate Model
-            </button>
-        </div>
+            <div className="border-tertiary h-full w-full border-t pt-4"></div>
+        </>
     )
 }

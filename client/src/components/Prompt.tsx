@@ -19,33 +19,73 @@ export default function Prompt({ onGenerate }: PromptProps) {
     }
 
     return (
-        <div className="p-4 flex flex-col gap-4 h-full">
-            <h1 className="text-base">Text Prompt</h1>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                {/* Text Prompt */}
-                <div className="relative">
-                    <textarea
-                        rows={4}
-                        value={prompt}
-                        onChange={(e) => {
-                            setPrompt(e.target.value)
-                            e.target.style.height = 'auto'
-                            e.target.style.height = `${e.target.scrollHeight}px`
-                        }}
-                        placeholder="Describe your image"
-                        className="text-sm w-full h-auto overflow-hidden resize-none p-2 outline-none border border-tertiary rounded focus:ring-1 focus:ring-secondary"
-                    />
-                </div>
+        <>
+            <div className="flex flex-col gap-4 p-4">
+                <h1 className="text-base">Text Prompt</h1>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    {/* Text Prompt */}
+                    <div className="relative">
+                        <textarea
+                            rows={4}
+                            value={prompt}
+                            onChange={(e) => {
+                                const wordCount = e.target.value
+                                    .trim()
+                                    .split(/\s+/)
+                                    .filter(Boolean).length
+                                const MAX_WORDS = 25
 
-                {/* Generate Button */}
-                <button
-                    type="submit"
-                    className="text-white bg-secondary border-secondary cursor-pointer border-2 px-5 py-2 text-base text-nowrap whitespace-nowrap hover:bg-secondary-dark rounded uppercase"
-                    disabled={!prompt || isSubmitting}
-                >
-                    {isSubmitting ? 'Generating...' : 'Generate'}
-                </button>
-            </form>
-        </div>
+                                if (wordCount <= MAX_WORDS) {
+                                    setPrompt(e.target.value)
+                                }
+
+                                e.target.style.height = 'auto'
+                                e.target.style.height = `${Math.max(e.target.scrollHeight, 80)}px`
+                            }}
+                            placeholder="Describe the image you want to generate..."
+                            className="ring-tertiary focus:ring-secondary h-auto w-full resize-none overflow-hidden rounded bg-neutral-300 p-3 text-sm ring transition-all duration-200 outline-none focus:ring-1"
+                            disabled={isSubmitting}
+                            spellCheck
+                        />
+                        <div className="absolute right-2 bottom-3 text-right text-xs text-gray-500">
+                            {prompt.trim().split(/\s+/).filter(Boolean).length}{' '}
+                            / 25 words
+                        </div>
+                        {prompt.length > 0 && (
+                            <button
+                                type="button"
+                                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                                onClick={() => setPrompt('')}
+                                disabled={isSubmitting}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="12"
+                                    height="12"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        )}
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="rounded-btn"
+                        disabled={!prompt || isSubmitting}
+                    >
+                        {isSubmitting ? 'Creating...' : 'Create Image'}
+                    </button>
+                </form>
+            </div>
+            <div className="border-tertiary h-96 w-full border-t"></div>
+        </>
     )
 }

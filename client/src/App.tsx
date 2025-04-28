@@ -1,8 +1,8 @@
-import { Route, Routes } from "react-router-dom";
-import "./App.css";
-import Main from "./pages/Main";
-import Orla from "./pages/Orla";
-import Header from "./layout/Header";
+import { Route, Routes } from 'react-router-dom'
+import './App.css'
+import Main from './pages/Main'
+import Orla from './pages/Orla'
+import Header from './layout/Header'
 
 function App() {
     return (
@@ -12,10 +12,10 @@ function App() {
             </div>
             <Routes>
                 <Route path="/" element={<Main />} />
-                <Route path="/orla" element={<Orla />} />
+                <Route path="/generate" element={<Orla />} />
             </Routes>
         </>
-    );
+    )
 }
 
-export default App;
+export default App

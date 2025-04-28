@@ -79,10 +79,10 @@ export default function Model({ modelData }: ModelProps) {
     }, [modelData])
 
     return (
-        <div className="p-4 flex flex-col gap-4 h-full">
+        <div className="flex h-full flex-col gap-4 p-4">
             <h1>Model</h1>
             {displayError ? (
-                <span className="flex m-auto text-red-500">{displayError}</span>
+                <span className="m-auto flex text-red-500">{displayError}</span>
             ) : modelData && modelData.model_url ? (
                 <div style={{ height: '100%', width: '100%' }}>
                     <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
@@ -111,7 +111,7 @@ export default function Model({ modelData }: ModelProps) {
                     </Canvas>
                 </div>
             ) : (
-                <span className="flex m-auto text-tertiary">
+                <span className="text-tertiary m-auto flex">
                     Please select an image and generate a model
                 </span>
             )}
