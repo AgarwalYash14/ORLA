@@ -129,7 +129,7 @@ export default function Hero() {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-4">
-                    <p className="border-tertiary border-b p-8 text-sm leading-6">
+                    <p className="border-tertiary border-b p-8 text-sm leading-6 tracking-wide">
                         ORLA redefines digital creation by transforming simple
                         text into stunning 3D models in seconds. Our AI-powered
                         platform bridges imagination and reality for creators,
@@ -167,7 +167,7 @@ export default function Hero() {
                         </button>
                     </div>
                 </div>
-                <div className="border-tertiary flex h-20 w-full border-b-2">
+                <div className="border-tertiary flex h-20 max-h-40 w-full border-b-2">
                     <div className="flex h-full w-full items-center justify-between">
                         <div className="relative flex h-full w-1/4 items-center justify-center bg-stone-50 p-3">
                             <img
@@ -214,7 +214,7 @@ export default function Hero() {
                                 <Preload all />
                             </Suspense>
                         </Canvas>
-                        <div className="border-tertiary absolute bottom-0 h-20 w-full border-x-2 bg-white" />
+                        <div className="border-tertiary absolute bottom-0 h-[25vh] w-full border-x-2 bg-white 2xl:h-[40vh]" />
                         <div className="absolute bottom-24 -left-16 z-10 flex rotate-270 items-center gap-2">
                             <div className="bg-secondary h-2 w-2" />
                             <p className="text-xs uppercase">
