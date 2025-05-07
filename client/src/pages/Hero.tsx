@@ -167,7 +167,7 @@ export default function Hero() {
                         </button>
                     </div>
                 </div>
-                <div className="border-tertiary flex h-20 max-h-40 w-full border-b-2">
+                <div className="border-tertiary flex h-[4.75rem] max-h-40 w-full border-b">
                     <div className="flex h-full w-full items-center justify-between">
                         <div className="relative flex h-full w-1/4 items-center justify-center bg-stone-50 p-3">
                             <img
@@ -191,10 +191,11 @@ export default function Hero() {
                         </div>
                     </div>
                 </div>
-                <div className="absolute bottom-0 h-full w-1/2">
-                    <div className="border-tertiary relative h-full w-full">
+
+                <div className="absolute bottom-0 h-full max-h-[45rem] w-1/2">
+                    <div className="relative h-full w-full">
                         <Canvas
-                            className="z-50 h-full w-full"
+                            className="z-40 h-full w-full"
                             onCreated={() => setModelLoading(false)}
                             onError={handleError}
                             camera={{ position: [0, -3.5, 5], fov: 50 }}

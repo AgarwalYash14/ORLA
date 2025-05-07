@@ -1,12 +1,56 @@
 import { logo } from '../assets'
-import { Link, NavLink } from 'react-router-dom'
-import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [activeSection, setActiveSection] = useState('hero')
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen)
+    }
+
+    const scrollToSection = (sectionId: string) => {
+        setMobileMenuOpen(false)
+        const element = document.getElementById(sectionId)
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' })
+            setActiveSection(sectionId)
+        }
+    }
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const sections = ['hero', 'workflow', 'technology', 'use-cases', 'faq']
+            
+            // Find the section that is most in view
+            const current = sections.map(id => {
+                const element = document.getElementById(id)
+                if (element) {
+                    const rect = element.getBoundingClientRect()
+                    const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0)
+                    const visiblePercentage = visibleHeight / element.clientHeight
+                    return { id, visiblePercentage: visiblePercentage > 0 ? visiblePercentage : 0 }
+                }
+                return { id, visiblePercentage: 0 }
+            }).reduce((prev, current) => 
+                prev.visiblePercentage > current.visiblePercentage ? prev : current
+            )
+
+            setActiveSection(current.id)
+        }
+
+        window.addEventListener('scroll', handleScroll)
+        // Initialize the active section
+        handleScroll()
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+    }, [])
+
+    const getLinkClass = (sectionId: string) => {
+        return `nav-link px-2 py-1 ${activeSection === sectionId ? 'active-nav-link' : ''}`
     }
 
     return (
@@ -39,60 +83,42 @@ export default function Header() {
 
                     {/* Navigation Links - Desktop */}
                     <div className="border-tertiary hidden h-full w-[calc(50%-37px)] items-center justify-center gap-4 border-x-2 text-sm tracking-wider md:flex lg:gap-6">
-                        <NavLink
-                            to="/"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
+                        <button
+                            onClick={() => scrollToSection('hero')}
+                            className={getLinkClass('hero')}
                         >
                             Home
-                        </NavLink>
-                        <NavLink
-                            to="/generate"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('workflow')}
+                            className={getLinkClass('workflow')}
                         >
-                            Generate
-                        </NavLink>
-                        <NavLink
-                            to="/how-it-works"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
-                        >
-                            How ORLA works
-                        </NavLink>
-                        <NavLink
-                            to="/technology"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
+                            How ORLA Works
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('technology')}
+                            className={getLinkClass('technology')}
                         >
                             Technology
-                        </NavLink>
-                        {/* <NavLink
-                            to="/community"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('use-cases')}
+                            className={getLinkClass('use-cases')}
                         >
-                            Community
-                        </NavLink> */}
-                        <NavLink
-                            to="/docs"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
+                            Use Cases
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('faq')}
+                            className={getLinkClass('faq')}
                         >
-                            Docs
-                        </NavLink>
+                            FAQ
+                        </button>
                     </div>
 
                     {/* CTA Section */}
                     <div className="hidden w-1/4 items-center justify-end gap-4 text-sm md:flex lg:gap-8">
                         <Link to="/generate" className="rounded-btn">
-                            Get started
+                            Start creating
                         </Link>
                     </div>
 
@@ -126,75 +152,44 @@ export default function Header() {
             {mobileMenuOpen && (
                 <div className="border-tertiary bg-primary absolute z-50 w-full border-b-2 md:hidden">
                     <div className="mx-auto flex w-min flex-col items-center justify-center gap-4 py-4 text-sm tracking-wider text-nowrap">
-                        <NavLink
-                            to="/"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
-                            onClick={() => setMobileMenuOpen(false)}
+                        <button
+                            onClick={() => scrollToSection('hero')}
+                            className={getLinkClass('hero')}
                         >
                             Home
-                        </NavLink>
-                        <NavLink
-                            to="/generate"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
-                            onClick={() => setMobileMenuOpen(false)}
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('workflow')}
+                            className={getLinkClass('workflow')}
                         >
                             Generate
-                        </NavLink>
-                        <NavLink
-                            to="/how-it-works"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            How ORLA works
-                        </NavLink>
-                        <NavLink
-                            to="/technology"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
-                            onClick={() => setMobileMenuOpen(false)}
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('technology')}
+                            className={getLinkClass('technology')}
                         >
                             Technology
-                        </NavLink>
-                        <NavLink
-                            to="/community"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
-                            onClick={() => setMobileMenuOpen(false)}
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('use-cases')}
+                            className={getLinkClass('use-cases')}
                         >
-                            Community
-                        </NavLink>
-                        <NavLink
-                            to="/docs"
-                            className={({ isActive }) =>
-                                `nav-link px-2 py-1 ${isActive ? 'active' : ''}`
-                            }
-                            onClick={() => setMobileMenuOpen(false)}
+                            Use Cases
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('faq')}
+                            className={getLinkClass('faq')}
                         >
                             Docs
-                        </NavLink>
+                        </button>
                     </div>
                     <div className="border-tertiary flex flex-col items-center gap-4 border-t py-4">
-                        {/* <Link
-                            to="/login"
-                            className="nav-link py-2"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            Login
-                        </Link> */}
                         <Link
-                            to="/signup"
+                            to="/generate"
                             className="rounded-btn"
                             onClick={() => setMobileMenuOpen(false)}
                         >
-                            Get started
+                            Start creating
                         </Link>
                     </div>
                 </div>

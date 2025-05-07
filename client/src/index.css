@@ -8,10 +8,12 @@
     --font-secondary: 'Amiga', sans-serif;
     --font-tertiary: 'Outfit', sans-serif;
 
-    /* Font color     */
+    /* Color     */
     --color-primary: oklch(92.2% 0 0);
     --color-secondary: oklch(62.3% 0.214 259.815); /* blue */
-    --color-tertiary: oklch(70.8% 0 0); /* border */
+    --color-tertiary: oklch(70.8% 0 0); /* gray */
+    --color-quaternary: oklch(44.6% 0.03 256.802);
+    --color-quinary: oklch(70.5% 0.213 47.604);
 }
 
 @font-face {
@@ -161,8 +163,8 @@ body {
 
 .nav-link:hover::before,
 .nav-link:hover::after,
-.nav-link.active::before,
-.nav-link.active::after {
+.nav-link.active-nav-link::before,
+.nav-link.active-nav-link::after {
     opacity: 1;
     transform: translate(0, 0);
 }
@@ -230,6 +232,54 @@ body {
 
 .rounded-btn:hover::after {
     background-color: var(--color-primary);
+}
+
+.boxes {
+    position: relative;
+}
+
+.corner {
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+.top-left {
+    top: 2rem;
+    left: 2rem;
+    border-top: 2px solid var(--color-quaternary);
+    border-left: 2px solid var(--color-quaternary);
+    transform: translate(50%, 50%);
+}
+
+.top-right {
+    top: 2rem;
+    right: 2rem;
+    border-top: 2px solid var(--color-quaternary);
+    border-right: 2px solid var(--color-quaternary);
+    transform: translate(-50%, 50%);
+}
+
+.bottom-left {
+    bottom: 2rem;
+    left: 2rem;
+    border-bottom: 2px solid var(--color-quaternary);
+    border-left: 2px solid var(--color-quaternary);
+    transform: translate(50%, -50%);
+}
+
+.bottom-right {
+    bottom: 2rem;
+    right: 2rem;
+    border-bottom: 2px solid var(--color-quaternary);
+    border-right: 2px solid var(--color-quaternary);
+    transform: translate(-50%, -50%);
+}
+
+.boxes:hover .corner,
+.boxes:hover div .number {
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
 }
 
 .scrollbar-hide {
