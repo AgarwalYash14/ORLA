@@ -1,10 +1,12 @@
 import { logo } from '../assets'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [activeSection, setActiveSection] = useState('hero')
+    const navigate = useNavigate()
+    const location = useLocation()
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen)
@@ -12,36 +14,73 @@ export default function Header() {
 
     const scrollToSection = (sectionId: string) => {
         setMobileMenuOpen(false)
+
+        if (location.pathname !== '/') {
+            const targetSection = sectionId
+
+            navigate('/', {
+                state: { scrollToSection: targetSection },
+                replace: true,
+            })
+
+            return
+        }
+
         const element = document.getElementById(sectionId)
         if (element) {
-            element.scrollIntoView({ behavior: 'smooth' })
+            const headerHeight =
+                document.querySelector('header')?.clientHeight || 80
+
+            const elementPosition =
+                element.getBoundingClientRect().top + window.scrollY
+
+            window.scrollTo({
+                top: elementPosition - headerHeight,
+                behavior: 'smooth',
+            })
+
             setActiveSection(sectionId)
         }
     }
 
     useEffect(() => {
         const handleScroll = () => {
-            const sections = ['hero', 'workflow', 'technology', 'use-cases', 'faq']
-            
-            // Find the section that is most in view
-            const current = sections.map(id => {
-                const element = document.getElementById(id)
-                if (element) {
-                    const rect = element.getBoundingClientRect()
-                    const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0)
-                    const visiblePercentage = visibleHeight / element.clientHeight
-                    return { id, visiblePercentage: visiblePercentage > 0 ? visiblePercentage : 0 }
-                }
-                return { id, visiblePercentage: 0 }
-            }).reduce((prev, current) => 
-                prev.visiblePercentage > current.visiblePercentage ? prev : current
-            )
+            const sections = [
+                'hero',
+                'workflow',
+                'technology',
+                'use-cases',
+                'faq',
+            ]
+
+            const current = sections
+                .map((id) => {
+                    const element = document.getElementById(id)
+                    if (element) {
+                        const rect = element.getBoundingClientRect()
+                        const visibleHeight =
+                            Math.min(rect.bottom, window.innerHeight) -
+                            Math.max(rect.top, 0)
+                        const visiblePercentage =
+                            visibleHeight / element.clientHeight
+                        return {
+                            id,
+                            visiblePercentage:
+                                visiblePercentage > 0 ? visiblePercentage : 0,
+                        }
+                    }
+                    return { id, visiblePercentage: 0 }
+                })
+                .reduce((prev, current) =>
+                    prev.visiblePercentage > current.visiblePercentage
+                        ? prev
+                        : current
+                )
 
             setActiveSection(current.id)
         }
 
         window.addEventListener('scroll', handleScroll)
-        // Initialize the active section
         handleScroll()
 
         return () => {
@@ -49,8 +88,38 @@ export default function Header() {
         }
     }, [])
 
+    useEffect(() => {
+        if (
+            location.pathname === '/' &&
+            location.state &&
+            location.state.scrollToSection
+        ) {
+            const targetSection = location.state.scrollToSection
+
+            setTimeout(() => {
+                const element = document.getElementById(targetSection)
+                if (element) {
+                    const headerHeight =
+                        document.querySelector('header')?.clientHeight || 80
+
+                    const elementPosition =
+                        element.getBoundingClientRect().top + window.scrollY
+                    window.scrollTo({
+                        top: elementPosition - headerHeight,
+                        behavior: 'smooth',
+                    })
+
+                    setActiveSection(targetSection)
+
+                    navigate('/', { replace: true, state: {} })
+                }
+            }, 100)
+        }
+    }, [location, navigate])
+
     const getLinkClass = (sectionId: string) => {
-        return `nav-link px-2 py-1 ${activeSection === sectionId ? 'active-nav-link' : ''}`
+        const isHomeRoute = location.pathname === '/'
+        return `nav-link px-2 py-1 ${isHomeRoute && activeSection === sectionId ? 'active-nav-link' : ''}`
     }
 
     return (
