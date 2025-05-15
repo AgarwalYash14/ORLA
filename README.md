@@ -15,7 +15,7 @@
   <hr>
 </div>
 
-ORLA is a web application that transforms text prompts and images into detailed 3D models using advanced AI technologies. With an intuitive interface and powerful backend, ORLA enables users to generate high-quality 3D assets quickly and easily.
+ORLA is a web application that transforms text prompts into detailed 3D models using advanced AI technologies. With an intuitive interface and powerful backend, ORLA enables users to generate high-quality 3D assets quickly and easily.
 
 ## Screenshots
 
@@ -44,7 +44,8 @@ ORLA is a web application that transforms text prompts and images into detailed 
 - **FastAPI** for RESTful API endpoints
 - **Celery** for asynchronous task processing
 - **Redis** for task queue management
-- **Hunyuan3D-2** AI model for 3D generation
+- **Stable Diffusion 3.5** AI model for image generation
+- **Hunyuan3D-2** AI model for 3D model creation
 - **Docker** for containerization
 
 ## Getting Started
@@ -90,10 +91,29 @@ ORLA is a web application that transforms text prompts and images into detailed 
 
 ## Usage
 
-1. **Enter a text prompt** describing the 3D model you want to generate
-2. **Click "Generate"** and wait for the AI to process your request
-3. **Select from generated images** to create a 3D model
-4. **Interact with your 3D model** using mouse controls (orbit, pan, zoom)
+1. **Enter a text prompt** describing the 3D model you want to generate (e.g., "a futuristic sports car")
+2. **Click "Generate"** and wait for the AI to process your request through Stability AI's image generation API
+3. **Review the generated image** optimized for 3D conversion (with white background and clear object definition)
+4. **Select the image** to initiate 3D model creation through Hunyuan3D-2
+5. **Interact with your 3D model** using mouse controls (orbit to rotate, scroll to zoom, right-click to pan)
+
+## Image Generation Process
+
+ORLA uses advanced AI models to generate 3D assets through a multi-step process:
+
+1. **Text Prompt Processing**: Your text prompt is enhanced with specific parameters optimized for 3D modeling
+2. **AI Image Generation**: The backend uses Stability AI's Stable Diffusion 3.5 Large Turbo model to generate high-quality 2D renders
+3. **Image Optimization**: Generated images are processed with specific attributes (isolated objects, solid background, uniform lighting, etc.)
+4. **3D Model Creation**: Selected 2D images are transformed into 3D models using Tencent's Hunyuan3D-2 neural network model
+5. **Real-time Visualization**: The 3D model is rendered in the browser using Three.js for interactive viewing
+
+The technical workflow includes:
+- Text prompts sent to FastAPI endpoints
+- Enhanced prompts include specifications for optimal 3D conversion (low-poly style, sharp edges, white background, etc.)
+- Celery workers process the requests asynchronously with Stable Diffusion API
+- Generated images are saved and served from the server's static directory
+- Selected images are processed by Hunyuan3D-2 to create detailed 3D models
+- Redis manages the task queue for efficient processing of multiple requests
 
 ## Project Structure
 
@@ -149,6 +169,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgements
 
+- [Stable Diffusion 3.5](https://huggingface.co/stabilityai/stable-diffusion-3.5-large-turbo) by Stability AI for image generation
 - [Hunyuan3D-2](https://huggingface.co/tencent/Hunyuan3D-2) by Tencent for the 3D model generation
 - [React Three Fiber](https://github.com/pmndrs/react-three-fiber) for 3D rendering in React
 - [FastAPI](https://fastapi.tiangolo.com/) for the backend API
