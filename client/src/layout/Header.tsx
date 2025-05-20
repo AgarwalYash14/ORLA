@@ -152,36 +152,21 @@ export default function Header() {
 
                     {/* Navigation Links - Desktop */}
                     <div className="border-tertiary hidden h-full w-[calc(50%-37px)] items-center justify-center gap-4 border-x-2 text-sm tracking-wider md:flex lg:gap-6">
-                        <button
-                            onClick={() => scrollToSection('hero')}
-                            className={getLinkClass('hero')}
-                        >
-                            Home
-                        </button>
-                        <button
-                            onClick={() => scrollToSection('workflow')}
-                            className={getLinkClass('workflow')}
-                        >
-                            How ORLA Works
-                        </button>
-                        <button
-                            onClick={() => scrollToSection('technology')}
-                            className={getLinkClass('technology')}
-                        >
-                            Technology
-                        </button>
-                        <button
-                            onClick={() => scrollToSection('use-cases')}
-                            className={getLinkClass('use-cases')}
-                        >
-                            Use Cases
-                        </button>
-                        <button
-                            onClick={() => scrollToSection('faq')}
-                            className={getLinkClass('faq')}
-                        >
-                            FAQ
-                        </button>
+                        {[
+                            { id: 'hero', label: 'Home' },
+                            { id: 'workflow', label: 'How ORLA Works' },
+                            { id: 'technology', label: 'Technology' },
+                            { id: 'use-cases', label: 'Use Cases' },
+                            { id: 'faq', label: 'FAQ' },
+                        ].map((item) => (
+                            <button
+                                key={item.id}
+                                onClick={() => scrollToSection(item.id)}
+                                className={`${getLinkClass(item.id)} cursor-pointer`}
+                            >
+                                {item.label}
+                            </button>
+                        ))}
                     </div>
 
                     {/* CTA Section */}

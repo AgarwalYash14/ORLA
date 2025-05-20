@@ -19,7 +19,7 @@ export default function Prompt({ onGenerate }: PromptProps) {
     }
 
     return (
-        <>
+        <div className="flex h-full flex-col justify-between">
             <div className="flex flex-col gap-4 p-4">
                 <h1 className="text-base">Text Prompt</h1>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -85,7 +85,27 @@ export default function Prompt({ onGenerate }: PromptProps) {
                     </button>
                 </form>
             </div>
-            <div className="border-tertiary h-96 w-full border-t"></div>
-        </>
+            <div className="border-tertiary flex w-full flex-col gap-4 border-t p-4">
+                <div className="flex flex-col gap-2 rounded-lg text-justify text-sm">
+                    <p className="font-medium">Tips for better results:</p>
+                    <div className="space-y-1">
+                        {[
+                            'Be specific about the scene you want to create',
+                            'Include details about style and colors',
+                            "Try different approaches if you don't get the desired result",
+                        ].map((tip, index) => (
+                            <div key={index} className="flex items-start gap-2">
+                                <div className="bg-secondary mt-2 h-1.5 w-1.5 flex-shrink-0" />
+                                <p className="flex-1">{tip}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <p className="text-justify text-xs">
+                    *prompt may take a few seconds to generate, depending on the
+                    complexity of the image.
+                </p>
+            </div>
+        </div>
     )
 }

@@ -14,13 +14,25 @@ export default function Orla() {
     const [isLoadingModel, setIsLoadingModel] = useState(false)
     const [lastPrompt, setLastPrompt] = useState<string>('')
 
-    const handleGenerateImages = async (prompt: string) => {
+    const handleGenerateImages = async (
+        prompt: string,
+        forceNewSeed = false
+    ) => {
         setError(null)
         setIsLoadingImage(true)
         setLastPrompt(prompt)
         try {
             const formData = new FormData()
-            if (prompt) formData.append('prompt', prompt)
+
+            // Add a timestamp or random seed to force different results when retrying
+            if (forceNewSeed) {
+                // Append timestamp and random number to ensure uniqueness even with rapid clicks
+                const randomSeed =
+                    Date.now() + Math.floor(Math.random() * 10000)
+                formData.append('prompt', `${prompt.trim()} seed:${randomSeed}`)
+            } else {
+                formData.append('prompt', prompt)
+            }
 
             const response = await axios.post(
                 'http://localhost:8000/generate-images',
@@ -50,7 +62,10 @@ export default function Orla() {
 
     const handleRetry = () => {
         if (lastPrompt) {
-            handleGenerateImages(lastPrompt)
+            // Clear existing images before generating new ones
+            setGeneratedImages([])
+            // Call the image generation function with the last prompt but force a new seed
+            handleGenerateImages(lastPrompt, true)
         }
     }
 
@@ -114,15 +129,10 @@ export default function Orla() {
                         </div>
                     </div>
                     <div className="w-1/2 overflow-hidden">
-                        <Model modelData={modelData} />
-                        {isLoadingModel && (
-                            <div className="mt-4 flex items-center justify-center">
-                                <div className="border-secondary h-12 w-12 animate-spin rounded-full border-t-2 border-b-2"></div>
-                                <span className="text-tertiary ml-2">
-                                    Generating 3D model...
-                                </span>
-                            </div>
-                        )}
+                        <Model
+                            modelData={modelData}
+                            isLoading={isLoadingModel}
+                        />
                     </div>
                 </div>
                 {error && (
