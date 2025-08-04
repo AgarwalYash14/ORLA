@@ -1,11 +1,14 @@
 <div align="center">
   <img src="client/public/logo.png" alt="ORLA Logo" width="150" height="auto">
-  <h1 align="center" style="font-size: 3.5rem; margin-top: 10px; margin-bottom: 20px;">
-    ORLA
-  </h1>
-  <p align="center">
-    <b>AI-Powered 3D Model Generator</b>
-  </p>
+  <div>
+    <h1>ORLA</h1>
+    <p><i>AI-Powered 3D Model Generator</i></p>
+
+  ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=Agarwalyash14.Orla)
+  ![GitHub stars](https://img.shields.io/github/stars/Agarwalyash14/Orla)
+  ![GitHub forks](https://img.shields.io/github/forks/Agarwalyash14/Orla)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  </div>
   <p align="center">
     <a href="#features">Features</a> •
     <a href="#screenshots">Screenshots</a> •
