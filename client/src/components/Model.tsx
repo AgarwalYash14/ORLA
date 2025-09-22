@@ -173,7 +173,7 @@ export default function Model({ modelData, isLoading = false }: ModelProps) {
             ) : modelData && modelData.model_url ? (
                 <div
                     style={{ height: '100%', width: '100%' }}
-                    className="relative"
+                    className="relative cursor-grab"
                 >
                     {modelLoading && (
                         <div
