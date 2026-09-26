@@ -27,6 +27,11 @@ ORLA is a web application that transforms text prompts into detailed 3D models u
   <p><i>ORLA Homepage with main interface</i></p>
 </div>
 
+<div align="center">
+  <img src="client/public/results.png" alt="Example Output" width="800" height="auto">
+  <p><i>Results page with example output</i></p>
+</div>
+
 ## Features
 
 - **Text-to-3D Generation**: Create 3D models from textual descriptions
